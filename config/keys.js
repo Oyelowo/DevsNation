@@ -1,4 +1,3 @@
 module.exports = {
-    mongoURI : 
-    'mongodb://Oyelowo:Dayoson0202_@ds117935.mlab.com:17935/devsnation'
+    mongoURI : 'mongodb://Oyelowo:devsnation1@ds149754.mlab.com:49754/devsnation'
 }
