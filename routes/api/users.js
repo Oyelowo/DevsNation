@@ -35,7 +35,7 @@ router.post("/register", async (req, res) => {
   });
 
   bcrypt.genSalt(10, (err, salt) => {
-    bcrypt.hash(newUser.password, salt, async(err, hash) => {
+    bcrypt.hash(newUser.password, salt, async (err, hash) => {
       if (err) {
         throw err;
       }
@@ -50,14 +50,25 @@ router.post("/register", async (req, res) => {
   });
 });
 
-
-
-
 // @route GET api/users/login
 // @desc login User/ Returning JWT Token
 // @access Public
-router.post('/login', (req, res) => {
-  const email = req.body.email
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  // Find user by email
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(404).json({ email: "User not found" });
+  }
+
+  // Check Passoword
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (isMatch) {
+    res.json({ msg: "Success" });
+  } else {
+    return res.status(400).json({ password: "Passowrd is incorrect" });
+  }
 });
 
 module.exports = router;
