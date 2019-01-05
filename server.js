@@ -1,14 +1,19 @@
 const express = require("express");
+const mongoose = require("mongoose");
+
 const app = express();
+
+// DB Config
+//const db = require("./config/keys").mongoURI;
+
+const { mongoURI: db } = require("./config/keys");
+
+// Connect to MongoDB
+
+mongoose.connect(db).then(()=> console.log("mongoDB connected")).catch(err => console.log('err'));
+
 const port = process.env.PORT || 5000;
-const www = process.env.WWW || "./";
 
-app.use(express.static(www));
+app.get("/", (req, res) => res.send("Hellokekk"));
 
-console.log(`serving ${www}`);
-
-app.get("/", (req, res) => res.send("Hellrero"));
-
-app.listen(port, (req, res) => {
-  console.log(`listening on port${port}`);
-});
+app.listen(port, () => console.log(`listening on http://localhost:${port}`));
