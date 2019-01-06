@@ -7,7 +7,8 @@ const keys = require("../../config/keys");
 const passport = require("passport");
 
 // Load Input validation
-const validateRegisterInput = require('../../validation/register');
+const validateRegisterInput = require("../../validation/register");
+const validateLoginInput = require("../../validation/login");
 
 // Load User model
 const User = require("../../models/User");
@@ -15,13 +16,13 @@ const User = require("../../models/User");
 // @route GET api/users/test
 // @desc Tests users route
 // @access Public
-router.get("/test", (req, res) => res.json({ msf: "Users Works" }));
+router.get("/test", (req, res) => res.json({ msg: "Users Works" }));
 
 // @route GET api/users/register
 // @desc Register user
 // @access Public
 router.post("/register", async (req, res) => {
-  const {errors, isValid} = validateRegisterInput(req.body);
+  const { errors, isValid } = validateRegisterInput(req.body);
 
   // Check Validation
   if (!isValid) {
@@ -29,9 +30,9 @@ router.post("/register", async (req, res) => {
   }
 
   const user = await User.findOne({ email: req.body.email });
-
   if (user) {
-    return res.status(400).json({ email: "email already exists" });
+    errors.email = "email already exists";
+    return res.status(400).json(errors);
   }
 
   const avatar = gravatar.url(req.body.email, {
@@ -67,12 +68,19 @@ router.post("/register", async (req, res) => {
 // @desc login User/ Returning JWT Token
 // @access Public
 router.post("/login", async (req, res) => {
+  const { errors, isValid } = validateLoginInput(req.body);
+  // Check Validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   const { email, password } = req.body;
 
   // Find user by email
   const user = await User.findOne({ email });
   if (!user) {
-    return res.status(404).json({ email: "User not found" });
+    errors.email = "User not found";
+    return res.status(404).json(errors);
   }
 
   // Check Passoword
@@ -91,16 +99,21 @@ router.post("/login", async (req, res) => {
       }
     );
   } else {
-    return res.status(400).json({ password: "Passowrd is incorrect" });
+    errors.password = "Passowrd is incorrect";
+    return res.status(400).json(errors);
   }
 });
 
 // @route GET api/users/current
 // @desc Return current user
 // @access Private
-router.get("/current", passport.authenticate("jwt", { session: false }), (req, res)=>{
-    const {id, name , email} = req.user;
-    res.json({id, name, email});
-});
+router.get(
+  "/current",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { id, name, email } = req.user;
+    res.json({ id, name, email });
+  }
+);
 
 module.exports = router;
