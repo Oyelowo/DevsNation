@@ -43,6 +43,13 @@ router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
+    const { skills } = req.body;
+    
+    const profileFields = {
+      ...req.body,
+      user: req.user.id,
+      skills: skills.split(",")
+    };
     // Get fields
     const standardFields = [
       "handle",
@@ -70,7 +77,6 @@ router.post(
       });
     };
 
-    const profileFields = {};
     setProfileFields(standardFields, profileFields);
     profileFields.social = {};
     setProfileFields(socialMediaFields, profileFields.social);
