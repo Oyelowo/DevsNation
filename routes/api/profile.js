@@ -22,7 +22,7 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     const errors = {};
-    
+
     try {
       profile = await Profile.findOne({ user: req.user.id });
       if (!profile) {
@@ -36,4 +36,67 @@ router.get(
   }
 );
 
+// @route POST api/profile/
+// @desc create or edit user profile
+// @access Private
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    // Get fields
+    const standardFields = [
+      "handle",
+      "company",
+      "website",
+      "location",
+      "bio",
+      "status",
+      "githubusername"
+    ];
+
+    const socialMediaFields = [
+      "youtube",
+      "twitter",
+      "facebook",
+      "linkedin",
+      "instagram"
+    ];
+
+    const setProfileFields = (fieldsArray, profileFieldsToBeSet) => {
+      fieldsArray.forEach(field => {
+        if (req.body[field]) {
+          profileFieldsToBeSet[field] = req.body[field];
+        }
+      });
+    };
+
+    const profileFields = {};
+    setProfileFields(standardFields, profileFields);
+    profileFields.social = {};
+    setProfileFields(socialMediaFields, profileFields.social);
+
+    const profile = await Profile.findOne({ user: req.user.id });
+    if (profile) {
+      // Update
+      const profile = await Profile.findOneAndUpdate(
+        { user: req.user.id },
+        { $set: profileFields },
+        { new: true }
+      );
+      res.json(profile);
+    } else {
+      // Create
+
+      // Check if handle exits
+      const profile = await Profile.findOne({ handle: profileFields.handle });
+      if (profile) {
+        errors.handle = "That handle already exists";
+        res.status(400).json(errors);
+      }
+    }
+    //save profile
+    const newProfile = await new Profile(profileFields).save();
+    res.json(newProfile);
+  }
+);
 module.exports = router;
