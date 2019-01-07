@@ -4,18 +4,37 @@ const isEmpty = require("./is-empty");
 const validateProfileInput = data => {
   let errors = {};
 
-  data.handle = !isEmpty(data.handle) ? data.handle : "";
-  data.status = !isEmpty(data.status) ? data.status : "";
-  data.skills = !isEmpty(data.skills) ? data.skills : "";
+  const dataFields = ["handle", "status", "skills"];
 
-  if (!Validator.isLength (data.handle, { min: 2, max: 40 })) {
-    errors.handle = "handle needs yo be between 2 and 4 characters";
+  dataFields.forEach(field => {
+    // ensure it returns string if user fills in nothing(this could be null or undefined and Validator's isEmpty method accepts only string)
+    data[field] = !isEmpty(data[field]) ? data[field] : "";
+    if (Validator.isEmpty(data[field])) {
+      errors[field] = `${field} is required`;
+    }
+  });
+
+  if (data.handle && !Validator.isLength(data.handle, { min: 2, max: 40 })) {
+    errors.handle = "handle needs to be between 2 and 4 characters";
   }
 
-  if (!Validator.isLength (data.handle, { min: 2, max: 40 })) {
-    errors.handle = "handle needs yo be between 2 and 4 characters";
-  }
-  
+  usersUrls = [
+    "website",
+    "youtube",
+    "twitter",
+    "facebook",
+    "linkedin",
+    "instagram"
+  ];
+
+  usersUrls.forEach(url => {
+    if (!isEmpty(data[url])) {
+      if (!Validator.isURL(data[url])) {
+        errors[url] = "Not a valid URL";
+      }
+    }
+  });
+
   return {
     errors,
     isValid: isEmpty(errors)

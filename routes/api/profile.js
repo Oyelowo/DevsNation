@@ -3,6 +3,9 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const passport = require("passport");
 
+// Load Validation
+const validateProfileInput = require("../../validation/profile");
+
 // Load Profile Model
 const Profile = require("../../models/Profile");
 
@@ -24,7 +27,7 @@ router.get(
     const errors = {};
 
     try {
-      profile = await Profile.findOne({ user: req.user.id });
+      profile = await Profile.findOne({ user: req.user.id }).populate('user', ['name', 'avatar']);
       if (!profile) {
         errors.noprofile = "There is no profile for this user";
         return res.status(404).json(errors);
@@ -43,9 +46,14 @@ router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
+    const { errors, isValid } = validateProfileInput(req.body);
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+console.log(req.body)
     const { skills } = req.body;
-    
-    const profileFields = {
+
+    let profileFields = {
       ...req.body,
       user: req.user.id,
       skills: skills.split(",")
@@ -69,17 +77,18 @@ router.post(
       "instagram"
     ];
 
-    const setProfileFields = (fieldsArray, profileFieldsToBeSet) => {
+    const setProfileFields = (fieldsArray, profileFieldsToBeSet, reqBody) => {
       fieldsArray.forEach(field => {
-        if (req.body[field]) {
-          profileFieldsToBeSet[field] = req.body[field];
+        if (reqBody[field]) {
+          profileFieldsToBeSet[field] = reqBody[field];
         }
       });
     };
 
-    setProfileFields(standardFields, profileFields);
+    
+    setProfileFields(standardFields, profileFields, req.body);
     profileFields.social = {};
-    setProfileFields(socialMediaFields, profileFields.social);
+    setProfileFields(socialMediaFields, profileFields.social, req.body);
 
     const profile = await Profile.findOne({ user: req.user.id });
     if (profile) {
