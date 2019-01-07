@@ -27,7 +27,10 @@ router.get(
     const errors = {};
 
     try {
-      profile = await Profile.findOne({ user: req.user.id }).populate('user', ['name', 'avatar']);
+      profile = await Profile.findOne({ user: req.user.id }).populate("user", [
+        "name",
+        "avatar"
+      ]);
       if (!profile) {
         errors.noprofile = "There is no profile for this user";
         return res.status(404).json(errors);
@@ -50,7 +53,7 @@ router.post(
     if (!isValid) {
       return res.status(400).json(errors);
     }
-console.log(req.body)
+    console.log(req.body);
     const { skills } = req.body;
 
     let profileFields = {
@@ -85,7 +88,6 @@ console.log(req.body)
       });
     };
 
-    
     setProfileFields(standardFields, profileFields, req.body);
     profileFields.social = {};
     setProfileFields(socialMediaFields, profileFields.social, req.body);
