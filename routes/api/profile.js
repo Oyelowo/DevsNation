@@ -42,6 +42,7 @@ router.get(
   }
 );
 
+// Function to help take care of 'handle' and 'user' params
 const getUser = (endPoint, parameterNameInDB) => {
   // e.g /handle/:handle" will yield handle which is what we need to get the user by
   let parameterNameInUrl = endPoint.split(':')[1];
