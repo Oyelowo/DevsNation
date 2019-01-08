@@ -42,31 +42,44 @@ router.get(
   }
 );
 
+// @route GET api/profile/handle/all
+// @desc Get all profiles
+// @access Public
+router.get("/all", async (req, res) => {
+  const errors = {};
+  try {
+    let profiles = await Profile.find().populate("user", ["name", "avatar"]);
+    if (!profiles) {
+      errors.noprofile = "There are no profiles";
+      return res.status(404).json(errors);
+    }
+    res.json(profiles);
+  } catch (error) {
+    res.status(404).json({ profile: "There are no profiles" });
+  }
+});
+
 // Function to help take care of 'handle' and 'user' params
 const getUser = (endPoint, parameterNameInDB) => {
   // e.g /handle/:handle" will yield handle which is what we need to get the user by
-  let parameterNameInUrl = endPoint.split(':')[1];
+  let parameterNameInUrl = endPoint.split(":")[1];
   router.get(endPoint, async (req, res) => {
-
     const errors = {};
     try {
-      let profile = await Profile.findOne({ [parameterNameInDB]: req.params[parameterNameInUrl] }).populate(
-        "user",
-        ["name", "avatar"]
-      );
+      let profile = await Profile.findOne({
+        [parameterNameInDB]: req.params[parameterNameInUrl]
+      }).populate("user", ["name", "avatar"]);
       if (!profile) {
         errors.noprofile = "There is no profile for this user";
         res.status(404).json(errors);
       }
-  
+
       res.json(profile);
     } catch (error) {
-      res.status(404).json( { profile: "There is no profile for this user" });
+      res.status(404).json({ profile: "There is no profile for this user" });
     }
   });
-  
-}
-
+};
 
 // @route GET api/profile/handle/:handle
 // @desc Get profile by handle
