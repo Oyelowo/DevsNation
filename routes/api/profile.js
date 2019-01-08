@@ -42,6 +42,48 @@ router.get(
   }
 );
 
+// @route GET api/profile/handle/:handle
+// @desc Get profile by handle
+// @access Public
+router.get("/handle/:handle", async (req, res) => {
+  const errors = {};
+  try {
+    let profile = await Profile.findOne({ handle: req.params.handle }).populate(
+      "user",
+      ["name", "avatar"]
+    );
+    if (!profile) {
+      errors.noprofile = "There is no profile for this user";
+      res.status(404).json(errors);
+    }
+
+    res.json(profile);
+  } catch (error) {
+    res.status(404).json(error);
+  }
+});
+
+// @route GET api/profile/user/:user_id
+// @desc Get profile by user ID
+// @access Public
+router.get("/user/:user_id", async (req, res) => {
+  const errors = {};
+  try {
+    let profile = await Profile.findOne({ user: req.params.user_id }).populate(
+      "user",
+      ["name", "avatar"]
+    );
+    if (!profile) {
+      errors.noprofile = "There is no profile for this user";
+      res.status(404).json(errors);
+    }<
+
+    res.json(profile);
+  } catch (error) {
+    res.status(404).json({ profile: "There is no profile for this user" });
+  }
+});
+
 // @route POST api/profile/
 // @desc create or edit user profile
 // @access Private
@@ -53,7 +95,6 @@ router.post(
     if (!isValid) {
       return res.status(400).json(errors);
     }
-    console.log(req.body);
     const { skills } = req.body;
 
     let profileFields = {
@@ -61,6 +102,7 @@ router.post(
       user: req.user.id,
       skills: skills.split(",")
     };
+
     // Get fields
     const standardFields = [
       "handle",
