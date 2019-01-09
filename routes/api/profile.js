@@ -11,7 +11,7 @@ const validateEducationInput = require("../../validation/education");
 // Load Profile Model
 const Profile = require("../../models/Profile");
 
-// Load User Profile
+// Load User Model
 const User = require("../../models/User");
 
 // @route GET api/profile/test
@@ -251,18 +251,20 @@ router.post(
 );
 
 // function to help delete edu and experience parameters
-const deleteParameter = (route ,  parameterNameInDB)=>{
-  const param = route.split(':')[1];
+const deleteParameter = (route, parameterNameInDB) => {
+  const param = route.split(":")[1];
   router.delete(
     route,
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
       // user is embedded in the token
       const profile = await Profile.findOne({ user: req.user.id });
-  
+
       // Get remove index
-      profile[parameterNameInDB] = profile[parameterNameInDB].filter(item => item.id !== req.params[param]);
-  
+      profile[parameterNameInDB] = profile[parameterNameInDB].filter(
+        item => item.id !== req.params[param]
+      );
+
       try {
         const updatedProfile = await profile.save();
         res.json(updatedProfile);
@@ -271,18 +273,31 @@ const deleteParameter = (route ,  parameterNameInDB)=>{
       }
     }
   );
-}
-
+};
 
 // @route DELETE api/profile/experience/:exp_id
 // @desc  Delete experience to profile
 // @access Private
-deleteParameter("/experience/:exp_id", "experience")
+deleteParameter("/experience/:exp_id", "experience");
 
 // @route DELETE api/profile/education/:edu_id
 // @desc  Delete experience to profile
 // @access Private
-deleteParameter("/education/:edu_id", "education")
+deleteParameter("/education/:edu_id", "education");
 
+// @route DELETE api/profile/profile/
+// @desc  Delete user and profile
+// @access Private
+router.delete(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    // user is embedded in the token
+    const profile = await Profile.findOneAndRemove({ user: req.user.id });
+    const user = await User.findByIdAndRemove({ _id: req.user.id });
+
+    res.json({ success: true });
+  }
+);
 
 module.exports = router;
