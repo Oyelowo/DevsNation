@@ -5,15 +5,15 @@ const capitalizeFirstLetter = str => {
   return str[0].toUpperCase() + str.slice(1);
 };
 
-const validateExperienceInput = data => {
+const validateEducationInput = data => {
   let errors = {};
 
-  let fieldsToBeValidated = ["title", "company", "from"];
+  let fieldsToBeValidated = ["school", "degree", "fieldofstudy"];
   fieldsToBeValidated.forEach(field => {
     // Custom isEmpty function checks if null or undefined. The below returns strings which is necessary for Validator isEmpty method below
     data[field] = !isEmpty(data[field]) ? data[field] : "";
     if (Validator.isEmpty(data[field])) {
-      errors[field] = `${capitalizeFirstLetter(field)} is required`;
+      errors[field] = `${capitalizeFirstLetter(field == "fieldofstudy" ? "Field of study" : field)} is required`;
     }
   });
 
@@ -23,4 +23,4 @@ const validateExperienceInput = data => {
   };
 };
 
-module.exports = validateExperienceInput;
+module.exports = validateEducationInput;

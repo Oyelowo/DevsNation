@@ -93,7 +93,7 @@ router.post("/login", async (req, res) => {
     jwt.sign(
       payLoad,
       keys.secretOrKey,
-      { expiresIn: 60 * 60 },
+      { expiresIn: 60 * 60 * 24 * 7},
       (err, token) => {
         res.json({ success: true, token: "Bearer " + token });
       }
