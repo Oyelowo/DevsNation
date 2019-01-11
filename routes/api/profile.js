@@ -281,7 +281,7 @@ const deleteParameter = (route, parameterNameInDB) => {
 deleteParameter("/experience/:exp_id", "experience");
 
 // @route DELETE api/profile/education/:edu_id
-// @desc  Delete experience to profile
+// @desc  Delete education to profile
 // @access Private
 deleteParameter("/education/:edu_id", "education");
 
