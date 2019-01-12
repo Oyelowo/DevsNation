@@ -122,9 +122,6 @@ router.delete(
     }
 );
 
-
-
-
 // @route POST api/posts/like/:id
 // @desc Like post
 // @access Private
@@ -193,4 +190,79 @@ router.post(
         }
     }
 );
+
+
+// @route POST api/posts/comment/:id
+// @desc Add comment to post
+// @access Private
+router.post('/comment/:id', passport.authenticate('jwt', {
+    session: false
+}), async (req, res) => {
+    const {
+        errors,
+        isValid
+    } = ValidatePostInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
+
+    const {
+        text,
+        name,
+        avatar
+    } = req.body;
+
+    const newComment = {
+        text,
+        name,
+        avatar,
+        user: req.user.id
+    }
+
+    try {
+        const post = await Post.findById(req.params.id);
+        // Add to comments array
+        post.comments.unshift(newComment);
+        const updatedPost = await post.save();
+        res.json(updatedPost);
+    } catch (error) {
+        res.status(404).json({
+            postnotfound: 'No post found'
+        })
+    }
+
+})
+
+
+// @route DELETE api/posts/comment/:id/:comment_id
+// @desc Remove comment from post
+// @access Private
+router.delete('/comment/:id/:comment_id', passport.authenticate('jwt', {
+    session: false
+}), async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id);
+        const commentInPost = post.comments.filter(comment => comment._id.toString() === req.params.comment_id);
+        // Check if comment exists
+        if (commentInPost.length === 0) {
+            return res.status(404).json({
+                commentnotexist: 'Comment does not exist'
+            })
+        }
+
+        // Remove if it exists
+        post.comments = post.comments.filter(comment => comment._id.toString() !== req.params.comment_id);
+        const updatedPost = await post.save();
+        res.json(updatedPost);
+
+    } catch (error) {
+        res.status(404).json({
+            postnotfound: 'No post found'
+        })
+    }
+
+})
+
 module.exports = router;
