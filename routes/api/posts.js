@@ -119,9 +119,78 @@ router.delete(
                 postnotfound: "No post found"
             });
         }
+    }
+);
 
 
 
+
+// @route POST api/posts/like/:id
+// @desc Like post
+// @access Private
+router.post(
+    "/like/:id",
+    passport.authenticate("jwt", {
+        session: false
+    }),
+    async (req, res) => {
+        try {
+            const post = await Post.findById(req.params.id);
+            // check if the user already liked the post
+            const postLikedByUser = post.likes.filter(like => like.user.toString() === req.user.id);
+            if (postLikedByUser.length > 0) {
+                return res.status(400).json({
+                    alreadyliked: 'User already liked this post'
+                })
+            }
+
+            // Add the user id to the like array
+            post.likes.unshift({
+                user: req.user.id
+            })
+
+            const updatedPost = await post.save();
+            res.json(updatedPost)
+
+
+        } catch (error) {
+            res.status(404).json({
+                postnotfound: "No post found"
+            });
+        }
+    }
+);
+
+
+// @route POST api/posts/unlike/:id
+// @desc Unlike post
+// @access Private
+router.post(
+    "/unlike/:id",
+    passport.authenticate("jwt", {
+        session: false
+    }),
+    async (req, res) => {
+        try {
+            const post = await Post.findById(req.params.id);
+            // check if the user already liked the post
+            const postLikedByUser = post.likes.filter(like => like.user.toString() === req.user.id);
+            if (postLikedByUser.length === 0) {
+                return res.status(400).json({
+                    notliked: 'You have not yet liked this post'
+                })
+            }
+
+            // Remove the like(user id) from the array
+            post.likes = post.likes.filter(like => like.user.toString() !== req.user.id)
+            const updatedPost = await post.save()
+            res.json(updatedPost);
+
+        } catch (error) {
+            res.status(404).json({
+                postnotfound: "No post found"
+            });
+        }
     }
 );
 module.exports = router;
