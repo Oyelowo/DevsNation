@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -34,13 +34,13 @@ class Dashboard extends Component {
       } else {
         // User is logged in but has no profile
         dashboardContent = (
-          <Fragment>
+          <div>
             <p className="lead text-muted">Welcome {user.name}</p>
             <p>You can set up your profile here</p>
             <Link to="/create-profile" className="btn btn-lg btn-info">
               Create Profile
             </Link>
-          </Fragment>
+          </div>
         );
       }
     }

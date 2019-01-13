@@ -52,7 +52,6 @@ class Register extends Component {
   handleSubmit = async e => {
     e.preventDefault();
     const { name, email, password, password2 } = this.state;
-    const { errors } = this.props;
     const newUser = {
       name,
       email,
