@@ -1,8 +1,22 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+//import { Redirect } from 'react-router-dom';
 
 class Landing extends Component {
+
+  componentDidMount() {
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push("/dashboard");
+    }
+  }
+
   render() {
+// ALTERNATIVE FOR REDIRECTING IF NOT USING THE COMPONENT DIDMOUNT LIFECYCLE
+   /* if (this.props.auth.isAuthenticated) {
+      return <Redirect to="/dashboard" />;
+    }*/
     return (
       <div className="landing">
         <div className="dark-overlay landing-inner text-light">
@@ -31,4 +45,12 @@ class Landing extends Component {
   }
 }
 
-export default Landing;
+Landing.propTypes = {
+  auth: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps)(Landing);

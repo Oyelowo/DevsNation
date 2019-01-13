@@ -13,14 +13,37 @@ class Register extends Component {
     errors: {}
   };
 
-  // This is for trial. It is unncessary as errors can be
+  componentDidMount() {
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push("/dashboard");
+    }
+  }
+
+  /*// This is for trial. It is unncessary as errors can be
   // used directly from the props passed to this component
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
     }
-  }
+  }*/
 
+  /* THIS SEEMS UNNECESSARY. ERRORS CAN BE RECEIVED DIRECTLY FROM PROPS
+  IF CHANGED BACK TO THIS IMPLEMENTATION, REMEMBER TO DECONSTRUCTURE OR GET THE 
+  ERROR FROM STATE INSTEAD OF PROPS IN THE RENDER SECTION
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.errors) {
+      return { errors: nextProps.errors };
+    }
+    // No state update necessary
+    return null;
+  }
+ 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.errors !== this.props.errors) {
+      this.setState({ errors: this.props.errors })
+    }
+  }
+  */
 
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
@@ -40,8 +63,8 @@ class Register extends Component {
   };
 
   render() {
-    const { errors, name, email, password, password2 } = this.state;
-
+    const { name, email, password, password2 } = this.state;
+    const { errors } = this.props;
     return (
       <div className="register">
         <div className="container">
