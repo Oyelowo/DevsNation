@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 
 import Login from "./components/auth/Login";
@@ -14,6 +14,7 @@ import Landing from "./components/layout/Landing";
 import Register from "./components/auth/Register";
 import Dashboard from "./components/dashboard/Dashboard";
 import { clearCurrentProfile } from "./actions/profileAction";
+import PrivateRoute from "./components/common/PrivateRoute";
 
 // Check for token
 if (localStorage.jwToken) {
@@ -46,7 +47,7 @@ class App extends Component {
           <div className="container">
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
-            <Route exact path="/dashboard" component={Dashboard} />
+            <PrivateRoute exact path="/dashboard" component={Dashboard} />
           </div>
           <Footer />
         </div>

@@ -52,6 +52,7 @@ class Register extends Component {
   handleSubmit = async e => {
     e.preventDefault();
     const { name, email, password, password2 } = this.state;
+    const { errors } = this.props;
     const newUser = {
       name,
       email,
@@ -77,7 +78,7 @@ class Register extends Component {
                   placeholder="Name"
                   name="name"
                   type="text"
-                  errorfield={errors.name}
+                  errorinfo={errors.name}
                   value={name}
                   onChange={this.handleChange}
                 />
@@ -85,7 +86,7 @@ class Register extends Component {
                   placeholder="Email Address"
                   type="email"
                   name="email"
-                  errorfield={errors.email}
+                  errorinfo={errors.email}
                   value={email}
                   onChange={this.handleChange}
                 />
@@ -93,7 +94,7 @@ class Register extends Component {
                   placeholder="Password"
                   type="password"
                   name="password"
-                  errorfield={errors.password}
+                  errorinfo={errors.password}
                   value={password}
                   onChange={this.handleChange}
                 />
@@ -101,7 +102,7 @@ class Register extends Component {
                   placeholder="Confirm Password"
                   type="password"
                   name="password2"
-                  errorfield={errors.password2}
+                  errorinfo={errors.password2}
                   value={password2}
                   onChange={this.handleChange}
                 />
