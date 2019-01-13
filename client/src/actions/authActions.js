@@ -5,6 +5,7 @@ import jwt_decode from 'jwt-decode';
 import {
     GET_ERRORS, SET_CURRENT_USER
 } from "./types";
+import { clearCurrentProfile } from "./profileAction";
 
 
 
@@ -61,11 +62,12 @@ export const setCurrentUser = (decoded) => {
 }
 
 // log user iut
-export const logoutUser = () => dispatch => {
+export const logoutUser = (history) => dispatch => {
   // Remove token from localStorage
-  localStorage.removeItem('jwtToken');
+  localStorage.removeItem('jwToken');
   // Remove auth header for future requests
   setAuthToken(false);
   // Set current user to {} which will set isAuthenticated to false
-  dispatch(setCurrentUser({}))
+  dispatch(setCurrentUser({}));
+  history.push('./')
 }

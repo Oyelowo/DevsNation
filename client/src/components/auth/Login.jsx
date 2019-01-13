@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import Input from "./input/Input";
-import axios from "axios";
+import TextFieldGroup from "../common/TextFieldGroup";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { loginUser } from "../../actions/authActions";
@@ -38,12 +37,12 @@ class Login extends Component {
       return { errors: nextProps.errors };
     }
 
-    if (nextProps.userId !== prevState.prevUserId) {
+ /* if (nextProps.userId !== prevState.prevUserId) {
       return {
         prevUserId: nextProps.userId,
         profileOrError: null
       };
-    }
+    }*/
 
     // No state update necessary
     return null;
@@ -71,20 +70,20 @@ class Login extends Component {
                 Sign in to your DevConnector account
               </p>
               <form noValidate onSubmit={this.handleSubmit}>
-                <Input
+                <TextFieldGroup
                   placeholder="Name"
                   name="email"
                   type="email"
-                  errorfield={errors.email}
+                  errorinfo={errors.email}
                   value={email}
                   onChange={this.handleChange}
                 />
 
-                <Input
+                <TextFieldGroup
                   placeholder="Password"
                   type="password"
                   name="password"
-                  errorfield={errors.password}
+                  errorinfo={errors.password}
                   value={password}
                   onChange={this.handleChange}
                 />

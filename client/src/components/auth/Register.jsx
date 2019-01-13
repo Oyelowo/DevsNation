@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
-import Input from "./input/Input";
 import { connect } from "react-redux";
 import { registerUser } from "../../actions/authActions";
+import TextFieldGroup from "../common/TextFieldGroup";
 class Register extends Component {
   state = {
     name: "",
@@ -73,7 +73,7 @@ class Register extends Component {
               <h1 className="display-4 text-center">Sign Up</h1>
               <p className="lead text-center">Create your DevsNation account</p>
               <form noValidate onSubmit={this.handleSubmit}>
-                <Input
+                <TextFieldGroup
                   placeholder="Name"
                   name="name"
                   type="text"
@@ -81,7 +81,7 @@ class Register extends Component {
                   value={name}
                   onChange={this.handleChange}
                 />
-                <Input
+                <TextFieldGroup
                   placeholder="Email Address"
                   type="email"
                   name="email"
@@ -89,7 +89,7 @@ class Register extends Component {
                   value={email}
                   onChange={this.handleChange}
                 />
-                <Input
+                <TextFieldGroup
                   placeholder="Password"
                   type="password"
                   name="password"
@@ -97,7 +97,7 @@ class Register extends Component {
                   value={password}
                   onChange={this.handleChange}
                 />
-                <Input
+                <TextFieldGroup
                   placeholder="Confirm Password"
                   type="password"
                   name="password2"
