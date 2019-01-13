@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import Input from "./input/Input";
 import axios from "axios";
-
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { loginUser } from "../../actions/authActions";
 
 class Login extends Component {
   state = {
@@ -14,24 +16,51 @@ class Login extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  handleSubmit = async(e) => {
+  handleSubmit = e => {
     e.preventDefault();
-    const {email, password} = this.state;
-    const newUser = {
-     email, password
+    const { email, password } = this.state;
+    const userData = {
+      email,
+      password
+    };
+
+    this.props.loginUser(userData);
+  };
+
+  componentDidMount() {
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push("/dashboard");
     }
-    console.log(newUser);
-       try {
-      const result = await axios.post("/api/users/login", newUser);
-      console.log(result);
-    } catch (error) {
-      this.setState({ errors: error.response.data });
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.errors) {
+      return { errors: nextProps.errors };
     }
-    
+
+    if (nextProps.userId !== prevState.prevUserId) {
+      return {
+        prevUserId: nextProps.userId,
+        profileOrError: null
+      };
+    }
+
+    // No state update necessary
+    return null;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.errors !== this.props.errors) {
+      this.setState({ errors: this.props.errors });
+    }
+    if (this.props.auth.isAuthenticated) {
+      this.setState({ isAuthenticated: this.props.auth.isAuthenticated });
+      this.props.history.push("/dashboard");
+    }
   }
 
   render() {
-    const {errors, email, password} = this.state;
+    const { errors, email, password } = this.state;
     return (
       <div className="login">
         <div className="container">
@@ -50,7 +79,7 @@ class Login extends Component {
                   value={email}
                   onChange={this.handleChange}
                 />
-               
+
                 <Input
                   placeholder="Password"
                   type="password"
@@ -69,4 +98,18 @@ class Login extends Component {
   }
 }
 
-export default Login;
+Login.propTypes = {
+  loginUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+export default connect(
+  mapStateToProps,
+  { loginUser }
+)(Login);
