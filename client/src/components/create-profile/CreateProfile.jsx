@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
+import InputGroup from "../common/InputGroup";
+import SelectListGroup from "../common/SelectListGroup";
 import TextFieldGroup from "../common/TextFieldGroup";
 
 class CreateProfile extends Component {
@@ -25,6 +28,8 @@ class CreateProfile extends Component {
     profile: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired
   };
+
+ 
 
   render() {
     return (
