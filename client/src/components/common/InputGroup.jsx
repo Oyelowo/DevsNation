@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const InputGroup = props => {
-  const { name, value, onChange, icon, type } = props;
+  const { name, value, onChange, icon, errorinfo } = props;
   return (
     <div className="input-group mb-3">
       <div className="input-group-prepend">
@@ -15,7 +15,7 @@ const InputGroup = props => {
         name={name}
         onChange={onChange}
         value={value}
-        {...props}
+        {...props} 
       />
       {errorinfo && <div className="invalid-feedback">{errorinfo}</div>}
     </div>
@@ -30,7 +30,7 @@ InputGroup.propTypes = {
   type: PropTypes.string.isRequired
 };
 
-Input.defaultProps = {
+InputGroup.defaultProps = {
   type: "text"
 };
 

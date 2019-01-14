@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const TextFieldGroup = props => {
-  const { name, value, errorinfo, type, onChange } = props;
+  const { name, value, errorinfo,info, type, onChange } = props;
   return (
     <div className="form-group">
       <input
@@ -14,6 +14,7 @@ const TextFieldGroup = props => {
         {...props}
       />
       {errorinfo && <div className="invalid-feedback">{errorinfo}</div>}
+      <small>{info}</small>
     </div>
   );
 };
