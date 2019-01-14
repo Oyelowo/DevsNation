@@ -2,17 +2,17 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const TextAreaFieldGroup = props => {
-  const { name, value, errorinfo, onChange } = props;
+  const { name, value, info, onChange } = props;
   return (
     <div className="form-group">
       <textarea
-        className={`form-control form-control-lg ${errorinfo && "is-invalid"}`}
+        className={`form-control form-control-lg`}
         name={name}
         onChange={onChange}
         value={value}
         {...props}
       />
-      {errorinfo && <div className="invalid-feedback">{errorinfo}</div>}
+      <small >{info}</small>
     </div>
   );
 };
