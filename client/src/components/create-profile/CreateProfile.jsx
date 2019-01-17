@@ -5,11 +5,14 @@ import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
 import InputGroup from "../common/InputGroup";
 import SelectListGroup from "../common/SelectListGroup";
 import TextFieldGroup from "../common/TextFieldGroup";
+import { createProfile } from "../../actions/profileAction";
+import {withRouter} from 'react-router-dom';
 
 class CreateProfile extends Component {
   state = {
     displaySocialInputs: false,
     handle: "",
+    status:"",
     company: "",
     website: "",
     location: "",
@@ -24,6 +27,8 @@ class CreateProfile extends Component {
     errors: {}
   };
 
+ 
+
   static propTypes = {
     profile: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired
@@ -31,7 +36,7 @@ class CreateProfile extends Component {
 
   onSubmit = e => {
     e.preventDefault();
-    console.log("submit");
+    this.props.createProfile(this.state, this.props.history);
   };
 
   onChange = e => {
@@ -39,7 +44,8 @@ class CreateProfile extends Component {
   };
 
   render() {
-    const { errors, handle, status, bio, displaySocialInputs } = this.state;
+    const { handle, status, bio, displaySocialInputs } = this.state;
+    const { errors } = this.props;
 
     const socialInputsItems = [
       { placeholder: "Twitter URL", value: "twitter" },
@@ -173,4 +179,7 @@ const mapStateToProps = ({ profile, errors }) => ({
   errors
 });
 
-export default connect(mapStateToProps)(CreateProfile);
+export default connect(
+  mapStateToProps,
+  { createProfile }
+)(withRouter(CreateProfile));
