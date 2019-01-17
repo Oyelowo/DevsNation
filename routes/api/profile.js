@@ -115,11 +115,11 @@ router.post(
     // Get fields
     const standardFields = [
       "handle",
+      "status",
       "company",
       "website",
       "location",
       "bio",
-      "status",
       "githubusername"
     ];
 

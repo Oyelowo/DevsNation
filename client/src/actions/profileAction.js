@@ -2,7 +2,8 @@ import axios from 'axios';
 import {
     PROFILE_LOADING,
     GET_PROFILE,
-    CLEAR_CURRENT_PROFILE
+    CLEAR_CURRENT_PROFILE,
+    GET_ERRORS
 } from './types';
 
 // Get currentprofile
@@ -26,6 +27,21 @@ export const getCurrentProfile = () => async dispatch => {
     }
 
 }
+
+
+// Create Profile
+export const createProfile = (profileData, history) => async dispatch => {
+    try {
+        await axios.post('/api/profile', profileData);
+        history.push('/dashboard');
+    } catch (error) {
+        dispatch({
+            type: GET_ERRORS,
+            payload: error.response.data
+        })
+    }
+}
+
 
 // Profile loading
 export const setProfileLoading = () => {
