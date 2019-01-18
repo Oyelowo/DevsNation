@@ -27,7 +27,27 @@ class CreateProfile extends Component {
     errors: {}
   };
 
- 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.errors) {
+      return { errors: nextProps.errors };
+    }
+
+ /* if (nextProps.userId !== prevState.prevUserId) {
+      return {
+        prevUserId: nextProps.userId,
+        profileOrError: null
+      };
+    }*/
+
+    // No state update necessary
+    return null;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.errors !== this.props.errors) {
+      this.setState({ errors: this.props.errors });
+    }
+  }
 
   static propTypes = {
     profile: PropTypes.object.isRequired,
@@ -44,8 +64,8 @@ class CreateProfile extends Component {
   };
 
   render() {
-    const { handle, status, bio, displaySocialInputs } = this.state;
-    const { errors } = this.props;
+    const {errors, handle, status, bio, displaySocialInputs } = this.state;
+    //const { errors } = this.props;
 
     const socialInputsItems = [
       { placeholder: "Twitter URL", value: "twitter" },
