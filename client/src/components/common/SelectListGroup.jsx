@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const SelectListGroup = props => {
-  const { name, value, info, onChange, options } = props;
+  const { name, value, info, onChange, options, errorinfo } = props;
   const selectOptions = options.map((option, i) => {
     const defaultSelected = i === 0;
     return (
@@ -27,6 +27,7 @@ const SelectListGroup = props => {
       >
         {selectOptions}
       </select>
+      {errorinfo && <div className="invalid-feedback">{errorinfo}</div>}
       <small>{info}</small>
     </div>
   );

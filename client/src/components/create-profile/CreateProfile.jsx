@@ -7,6 +7,7 @@ import SelectListGroup from "../common/SelectListGroup";
 import TextFieldGroup from "../common/TextFieldGroup";
 import { createProfile } from "../../actions/profileAction";
 import {withRouter} from 'react-router-dom';
+import uniqid from 'uniqid';
 
 class CreateProfile extends Component {
   state = {
@@ -16,7 +17,7 @@ class CreateProfile extends Component {
     company: "",
     website: "",
     location: "",
-    status: "",
+    skills:"",
     githubusername: "",
     bio: "",
     twitter: "",
@@ -27,32 +28,11 @@ class CreateProfile extends Component {
     errors: {}
   };
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.errors) {
-      return { errors: nextProps.errors };
-    }
-
- /* if (nextProps.userId !== prevState.prevUserId) {
-      return {
-        prevUserId: nextProps.userId,
-        profileOrError: null
-      };
-    }*/
-
-    // No state update necessary
-    return null;
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.errors !== this.props.errors) {
-      this.setState({ errors: this.props.errors });
-    }
-  }
-
   static propTypes = {
     profile: PropTypes.object.isRequired,
-    errors: PropTypes.object.isRequired
+    errors: PropTypes.object
   };
+ 
 
   onSubmit = e => {
     e.preventDefault();
@@ -64,9 +44,9 @@ class CreateProfile extends Component {
   };
 
   render() {
-    const {errors, handle, status, bio, displaySocialInputs } = this.state;
-    //const { errors } = this.props;
-
+    
+    const {handle, status, bio, displaySocialInputs } = this.state;
+    const { errors } = this.props;
     const socialInputsItems = [
       { placeholder: "Twitter URL", value: "twitter" },
       { placeholder: "Facebook Page URL", value: "facebook" },
@@ -77,7 +57,7 @@ class CreateProfile extends Component {
     let socialInputs;
     if (displaySocialInputs) {
       socialInputs = socialInputsItems.map(({ placeholder, value }) => (
-        <div>
+        <div key={uniqid()}>
           <InputGroup
             placeholder={placeholder}
             name={value}
@@ -140,12 +120,14 @@ class CreateProfile extends Component {
                   name="status"
                   value={status}
                   onChange={this.onChange}
-                  error={errors.status}
+                  errorinfo={errors.status}
                   options={options}
                   info="Where are you at in your career?"
                 />
+
                 {profileInfo.map(({ value, info }) => (
                   <TextFieldGroup
+                  key={uniqid()}
                     placeholder={
                       value === "githubusername" ? "Github Username" : value
                     }
