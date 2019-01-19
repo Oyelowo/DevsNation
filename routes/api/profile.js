@@ -17,7 +17,7 @@ const User = require("../../models/User");
 // @route GET api/profile/test
 // @desc Tests profile route
 // @access Public
-router.get("/test", (req, res) => res.json({ msf: "profile Works" }));
+//router.get("/test", (req, res) => res.json({ msf: "profile Works" }));
 
 // @route GET api/profile/
 // @desc Get current users profile
